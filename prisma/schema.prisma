@@ -24,6 +24,7 @@ model Users{
   userInfos UserInfos?
   posts Posts[]
   comments Comments[]
+  userHistories UserHistories[]
 
   @@map("Users")
 }
@@ -69,4 +70,17 @@ model Comments{
   post Posts @relation(fields:[postId],references:[postId],onDelete:Cascade)
 
   @@map("Comments")
+}
+
+model UserHistories{
+  userHistoryId String @id @default(uuid()) @map("userHistoryId")
+  userId Int @map("userId")
+  changedField String @map("changedField")
+  oldValue String? @map("oldValue")
+  newValue String @map("newValue")
+  changedAt DateTime @default(now()) @map("changedAt")
+
+  user Users @relation(fields:[userId],references:[userId],onDelete:Cascade)
+
+  @@map("UserHistories")
 }
