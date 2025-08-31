@@ -7,17 +7,20 @@ import LogMiddleware from './middlewares/log.middleware.js';
 import ErrorHandlingMiddleware from './middlewares/error-handling.middleware.js';
 import expressSession from 'express-session';
 import expressMySQLSession from 'express-mysql-session';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const PORT = 3018;
 
 const MySQLStore = expressMySQLSession(expressSession);
 const sessionStore = new MySQLStore({
-	user: 'root',
-	password: 'aaaa4321',
-	host: 'express-db.ch2imuc2cnne.ap-northeast-2.rds.amazonaws.com',
-	port: 3306,
-	database: 'community_hub',
+	user: process.env.DATABASE_USERNAME,
+	password: process.env.DATABASE_PASSWORD,
+	host: process.env.DATABASE_HOST,
+	port: process.env.DATABASE_PORT,
+	database: process.env.DATABASE_NAME,
 	expiration: 1000 * 60 * 60 * 24,
 	createDatabaseTable: true,
 });
@@ -27,7 +30,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
 	expressSession({
-		secret: 'custom-secret-key',
+		secret: process.env.SESSION_SECRET_KEY,
 		resave: false,
 		saveUninitialized: false,
 		cookie: {
